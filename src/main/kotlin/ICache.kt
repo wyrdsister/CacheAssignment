@@ -1,12 +1,12 @@
 package org.example
 
-interface EvictionStrategy<K, V> {
+interface ICache<K, V> {
 
     val maxCapacity: Int
 
-    fun add(key: K, value: V)
+    fun add(key: K, value: V) : Boolean
 
     fun retrieve(key: K) : V?
 
-    fun clear()
+    fun evict()
 }

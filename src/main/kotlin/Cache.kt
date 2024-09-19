@@ -1,7 +1,9 @@
 package org.example
 
-class Cache<K, V>(setting: Setting) {
+import kotlin.random.Random
+import kotlin.random.nextInt
 
+class Cache<K, V>(setting: Setting) {
     enum class Eviction {
         LRU,
         LFU
@@ -9,26 +11,19 @@ class Cache<K, V>(setting: Setting) {
 
     data class Setting(val maxCapacity: Int, val evictionStrategy: Eviction)
 
-    val evictionType: EvictionStrategy<K, V>
+    private val cacheImpl: ICache<K, V>
 
     init {
-        when(setting.evictionStrategy){
-            Eviction.LFU -> evictionType = LfuStrategy<K, V>(setting.maxCapacity)
-            Eviction.LRU -> evictionType = LruStrategy<K, V>(setting.maxCapacity)
+        cacheImpl = when(setting.evictionStrategy){
+            Eviction.LFU -> LfuCache<K, V>(setting.maxCapacity)
+            Eviction.LRU -> LfuCache<K, V>(setting.maxCapacity)
         }
 
     }
 
-    fun add(key: K, element: V) {
-        evictionType.add(key, element)
-    }
+    fun add(key: K, value: V) = cacheImpl.add(key, value)
 
-    fun retrieve(key: K): V? {
-        return evictionType.retrieve(key)
-    }
+    fun retrieve(key: K): V? = cacheImpl.retrieve(key)
 
-    private fun clear() {
-        evictionType.clear()
-    }
 
 }

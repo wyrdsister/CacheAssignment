@@ -1,12 +1,15 @@
+/*
 package org.example
 
 import java.time.Instant
-import java.util.Date
+import java.util.SortedSet
 import java.util.Stack
-import java.util.Timer
+import java.util.TreeSet
 
-class LruStrategy<K, V>(override val maxCapacity: Int) : EvictionStrategy<K, V> {
+class LruStrategy<K, V>() : Cache<K, V>(), EvictionStrategy<K, V> {
 
+*/
+/*
     data class CacheElement<K, V>(
         val key: K,
         val obj: V,
@@ -34,11 +37,13 @@ class LruStrategy<K, V>(override val maxCapacity: Int) : EvictionStrategy<K, V> 
             return null
         }
     }
+*//*
 
-    override fun clear() {
-        storage.sortByDescending { it?.retrieveTime?.nano }
-        for (index in storage.size - (1 + (maxCapacity * 0.2).toInt())..storage.size - 1) {
-            storage[index] = null
-        }
-    }
-}
+
+*/
+/*    override fun clear() {
+
+    }*//*
+
+
+}*/
