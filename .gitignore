@@ -15,8 +15,11 @@ build/
 out/
 !**/src/main/**/out/
 !**/src/test/**/out/
-.gradle
-.idea
+.idea/gradle.xml
+.idea/kotlinc.xml
+.idea/misc.xml
+.idea/vcs.xml
+.idea/workspace.xml
 
 ### Eclipse ###
 .apt_generated
