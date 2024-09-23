@@ -7,16 +7,13 @@ class LfuCache<K, V>(override val maxCapacity: Int) : ICache<K, V> {
     private val frequencyToKeys = HashMap<Int, LinkedHashSet<K>>()
     private var minFrequency = 0
 
-    override fun add(key: K, value: V) : Boolean{
-        if (maxCapacity < 1)
-            return false
-
+    override fun add(key: K, value: V){
         minFrequency = 0
 
         if (keyToValue.containsKey(key)){
             keyToValue[key] = value
             retrieve(key)
-            return true
+            return
         }
 
         if (keyToValue.size == maxCapacity)
@@ -25,7 +22,7 @@ class LfuCache<K, V>(override val maxCapacity: Int) : ICache<K, V> {
         keyToValue[key] = value
         addOrUpdateFrequency(key, minFrequency)
 
-        return true
+        return
     }
 
     override fun retrieve(key: K) : V? {

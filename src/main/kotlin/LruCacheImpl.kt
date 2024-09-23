@@ -1,49 +1,21 @@
-/*
 package org.example
 
-import java.time.Instant
-import java.util.SortedSet
-import java.util.Stack
-import java.util.TreeSet
+class LruCache<K, V>(override val maxCapacity: Int) : ICache<K, V> {
 
-class LruStrategy<K, V>() : Cache<K, V>(), EvictionStrategy<K, V> {
-
-*/
-/*
-    data class CacheElement<K, V>(
-        val key: K,
-        val obj: V,
-        var retrieveTime: Instant
-    )
-
-    private var storage: Array<CacheElement<K, V>?> = Array(maxCapacity) { null }
-    override fun add(key: K, value: V) {
-        if (storage.find { it?.key == key } != null) return
-
-        var index = storage.indexOf(null)
-        if (index == -1) {
-            clear()
-            index = storage.indexOf(null)
+    private val keyToValue = object : LinkedHashMap<K, V>(maxCapacity, 1f, true){
+        override fun removeEldestEntry(eldest: MutableMap.MutableEntry<K, V>?): Boolean {
+            return this.size > maxCapacity
         }
-        storage[index] = CacheElement(key, value, Instant.now())
+    }
+
+    override fun add(key: K, value: V) {
+        keyToValue[key] = value
     }
 
     override fun retrieve(key: K): V? {
-        val element = storage.find { it?.key == key }
-        if (element != null) {
-            element.retrieveTime = Instant.now()
-            return element.obj
-        } else {
-            return null
-        }
+        return keyToValue[key]
     }
-*//*
 
+    override fun evict() {}
 
-*/
-/*    override fun clear() {
-
-    }*//*
-
-
-}*/
+}

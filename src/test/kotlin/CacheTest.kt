@@ -1,53 +1,44 @@
 
-import org.example.Cache
 import org.junit.jupiter.api.Test
+import kotlin.test.assertEquals
+import kotlin.test.assertFailsWith
+import kotlin.test.assertNotNull
+import kotlin.test.assertNull
 
-class CacheTest {
-    @Test
-    fun lfuStrategyMissElement(){
-        val cache = Cache<String, Int>(Cache.Setting(5, Cache.Eviction.LFU))
+open class CacheTest {
+    fun testAddAndRetrieve(eviction: Eviction){
+        val cache = Cache<Int, String>(Cache.Setting(3, eviction))
 
-        cache.add("1", 1)
-        cache.add("2", 2)
-        cache.add("3", 3)
-        cache.add("4", 4)
-        cache.add("5", 5)
+        cache.add(1, "A")
+        cache.add(2, "B")
+        cache.add(3, "C")
 
-        cache.retrieve("2")
-        cache.retrieve("2")
-        cache.retrieve("3")
-        cache.retrieve("3")
-        cache.retrieve("4")
-        cache.retrieve("4")
-        cache.retrieve("5")
-        cache.retrieve("5")
+        assertEquals("A", cache.retrieve(1))
+        assertEquals("B", cache.retrieve(2))
+        assertEquals("C", cache.retrieve(3))
+    }
 
-        cache.add("6", 6)
-        assert(cache.retrieve("1") == null)
+    fun testEvictionWhenCapacityExceed(eviction: Eviction){
+        val cache = Cache<Int, String>(Cache.Setting(4, eviction))
+
+        cache.add(1, "A")
+        cache.add(2, "B")
+        cache.add(3, "C")
+        cache.add(4, "D")
+
+        cache.add(5, "E")
+
+        assertNull(cache.retrieve(1))
+        assertNotNull(cache.retrieve(5))
+        assertNotNull(cache.retrieve(2))
+        assertNotNull(cache.retrieve(3))
+        assertNotNull(cache.retrieve(4))
 
     }
 
-    @Test
-    fun lruStrategyMissElement(){
-        val cache = Cache<String, Int>(Cache.Setting(5, Cache.Eviction.LRU))
+    fun testZeroCapacity(eviction: Eviction){
+        val cache = Cache<Int, String>(Cache.Setting(0, eviction))
 
-        cache.add("1", 1)
-        Thread.sleep(1000)
-        cache.add("2", 2)
-        cache.add("3", 3)
-        cache.add("4", 4)
-        cache.add("5", 5)
-
-        cache.retrieve("2")
-        cache.retrieve("2")
-        cache.retrieve("3")
-        cache.retrieve("3")
-        cache.retrieve("4")
-        cache.retrieve("4")
-        cache.retrieve("5")
-        cache.retrieve("5")
-
-        cache.add("6", 6)
-        assert(cache.retrieve("1") == null)
+        assertFailsWith<IllegalStateException> { cache.add(1, "A") }
     }
 }
