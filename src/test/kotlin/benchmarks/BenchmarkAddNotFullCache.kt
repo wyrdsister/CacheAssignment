@@ -2,11 +2,8 @@ package benchmarks
 
 import Cache
 import Eviction
-import Eviction.LFU
-import Eviction.LRU
 import kotlinx.benchmark.*
 import org.openjdk.jmh.annotations.Fork
-import org.openjdk.jmh.annotations.Param
 import java.util.concurrent.TimeUnit
 
 @State(Scope.Benchmark)
@@ -16,10 +13,10 @@ import java.util.concurrent.TimeUnit
 class BenchmarkAddNotFullCache {
 
     @Param("100", "200", "500", "1000", "5000", "10000")
-    private var capacity: Int = 10
+    private var capacity: Int = 0
 
-    @Param("LRU")
-    private var eviction: String = "LFU"
+    @Param("LRU", "LFU")
+    private var eviction: String = ""
 
     private lateinit var cache: Cache<Int, String>
 
@@ -30,7 +27,9 @@ class BenchmarkAddNotFullCache {
 
     @Benchmark
     fun add10Benchmark() {
-        for (i in 1..10)
+        for (i in 1..10) {
             cache.add(i, "$i")
+        }
+
     }
 }
